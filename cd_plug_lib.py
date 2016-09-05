@@ -13,7 +13,6 @@ ToDo: (see end of file)
 import  sys, os, gettext, logging, inspect
 from    time        import perf_counter
 import  sw          as app
-from . import cudax_lib as apx
 
 pass;                           # Logging
 pass;                           from pprint import pformat

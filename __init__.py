@@ -6,14 +6,12 @@ Version:
     '0.8.2.AT 2016-09-05'
 '''
 
-import  re, os, sys, glob, json, collections
-from    fnmatch         import fnmatch
+import  re, os, sys, json
 import  sw              as app
 from    sw              import ed
 from . import cudax_lib as apx
 from    .cd_plug_lib    import *
 
-#OrdDict = collections.OrderedDict
 if app.app_api_version()<'1.0.154':
     app.msg_box(app.MSG_ERROR, 'Intext Bookmarks needs newer app version')
 

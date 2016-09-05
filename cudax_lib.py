@@ -7,10 +7,9 @@ Wiki: github.com/kvichans/cudax_lib/wiki
 ToDo: (see end of file)
 '''
 
-import  sw        as app
+import  sw    as app
 from    sw    import ed
-import  sw_cmd    as cmds
-import  os, json, re, sys, collections
+import  os, json, re, sys
 
 # Overridden option tools:
 APP_DEFAULT_OPTS    = {}
