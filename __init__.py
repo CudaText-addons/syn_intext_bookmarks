@@ -1,31 +1,31 @@
-﻿''' Plugin for CudaText editor
+﻿''' Plugin for Synwrite
 Authors:
     Andrey Kvichansky    (kvichans on github.com)
+    Alexey T.
 Version:
-    '0.8.1 2016-06-20'
-ToDo: (see end of file)
+    '0.8.2.AT 2016-09-05'
 '''
 
 import  re, os, sys, glob, json, collections
 from    fnmatch         import fnmatch
 import  sw              as app
 from    sw              import ed
-import  sw_cmd          as cmds
 from . import cudax_lib as apx
 from    .cd_plug_lib    import *
 
 #OrdDict = collections.OrderedDict
-#FROM_API_VERSION= '1.0.119'
+if app.app_api_version()<'1.0.154':
+    app.msg_box(app.MSG_ERROR, 'Intext Bookmarks needs newer app version')
 
 fn_config = 'syn_intext_bookmarks.ini'
 
-pass;                           LOG = (-2==-2)  # Do or dont logging.
+pass;                           LOG = False
 pass;                           from pprint import pformat
 pass;                           pf=lambda d:pformat(d,width=150)
 
 _   = get_translation(__file__) # I18N
-
 NO_LXR_SIGN = _('(none)')
+
 class Command:
     def __init__(self):#NOTE: init
         self.wrap       = app.ini_read(fn_config, 'op', 'intextbookmk_wrap', '1')=='1'

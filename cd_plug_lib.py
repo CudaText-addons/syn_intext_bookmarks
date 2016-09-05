@@ -2,7 +2,7 @@
 Authors:
     Andrey Kvichansky    (kvichans on github.com)
 Version:
-    '1.0.2 2016-03-22'
+    '1.0.2.AT 2016-09-05'
 Content
     log                 Logger with timing
     get_translation     i18n

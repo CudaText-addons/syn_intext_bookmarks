@@ -1,24 +1,8 @@
 ﻿''' Py-extensions for CudaText.
-Overridden option tools:
-    get_opt(path, def_value=None, level=CONFIG_LEV_ALL, ed=ed)
-        Reads option from configs (lexer-override config, then user config).
-        Path: simple value (e.g. "tab_size") or "/"-separated path inside JSON tree
-    set_opt(path, value, ed=ed, level=CONFIG_LEV_USER)
-        Add/Update/Delete option into a config (user-config if no param level).
-Comments:
-    cmt_toggle_stream
-        Add/Remove stream comment (as /*....*/) for cur selection or for cur line (by opt)
-    cmt_toggle_line_1st
-        Add/Remove comment at 1st pos of line
-    cmt_toggle_line_body
-        Add/Remove comment at 1st pos of text
-Duplicate:
-    duplicate
-        Dub cur selection or cur line (by opt)
 Authors:
     Andrey Kvichansky    (kvichans on github)
 Version:
-    '0.5.7 2016-08-01'
+    '0.5.7.AT 2016-09-05'
 Wiki: github.com/kvichans/cudax_lib/wiki
 ToDo: (see end of file)
 '''
@@ -50,79 +34,6 @@ pass;                           pfrm15=lambda d:pformat(d,width=15)
 pass;                           LOG = (-2==-2)  # Do or dont logging.
 pass;                           log_gap = ''    # use only into log()
 
-class Command:
-    ###############################################
-
-    def _get_cmt_pair(self, lex):
-        ''' Return ((begin_sign, end_sign), only_lines)
-                begin_sign    as '/*'
-                end_sign      as '*/'
-                only_lines    True if each of *_sign must be whole line
-        '''
-        if lex not in self.pair4lex:
-            # Search lex-pair
-            def_lexs_json   = os.path.join(get_def_setting_dir()             , 'default_lexers.json')
-            usr_lexs_json   = os.path.join(app.app_ini_dir(), 'user_lexers.json')
-            def_lexs        = _json_loads(open(def_lexs_json).read())
-            usr_lexs        = _json_loads(open(usr_lexs_json).read()) if os.path.exists(usr_lexs_json) else {"Comments":{}, "CommentsForLines":{}}
-            only_ln        = False
-            if False:pass
-            elif lex in   usr_lexs["Comments"]:
-                pair    = usr_lexs["Comments"].get(lex)
-            elif lex in   usr_lexs["CommentsForLines"]:
-                pair    = usr_lexs["CommentsForLines"].get(lex)
-                only_ln = True
-            elif lex in   def_lexs["Comments"]:
-                pair    = def_lexs["Comments"].get(lex)
-            elif lex in   def_lexs["CommentsForLines"]:
-                pair    = def_lexs["CommentsForLines"].get(lex)
-                only_ln = True
-            else:
-                pair    = ['','']
-            self.pair4lex[lex] = (pair, only_ln)
-        return self.pair4lex[lex]
-       #def _get_cmt_pair
-
-    #################################################
-    ## Duplicate
-    def duplicate(self):
-        if ed.get_sel_mode() != app.SEL_NORMAL:
-            return app.msg_status(ONLY_NORM_SEL_MODE.format(DUPLICATION))
-
-        crts    = ed.get_carets()
-        if len(crts)>1:
-            return app.msg_status(ONLY_SINGLE_CRT.format(DUPLICATION))
-
-        (cCrt, rCrt, cEnd, rEnd)    = crts[0]
-        bEmpSel = -1==rEnd
-        bUseFLn = get_opt('duplicate_full_line_if_no_sel', True)
-        bSkip   = get_opt('duplicate_move_down', True)
-        if bEmpSel:
-            if not bUseFLn:
-                return
-            # Dup whole row
-            row_txt    = ed.get_text_line(rCrt)
-            ed.insert(0, rCrt, row_txt+'\n')
-
-            # Move crt to next row
-            if bSkip and (rCrt+1)<ed.get_line_count():
-                _move_caret_down(cCrt, rCrt)
-            return
-
-        (rFr, cFr), (rTo, cTo)  = minmax((rCrt, cCrt), (rEnd, cEnd))
-        pass;                  #LOG and log('(cFr , rFr , cTo , rTo) ={}',(cFr , rFr , cTo , rTo))
-        sel_txt = ed.get_text_substr(cFr, rFr, cTo, rTo)
-        pass;                  #LOG and log('sel_txt={}',repr(sel_txt))
-        ed.insert(cFr, rFr, sel_txt)
-       #def duplicate
-
-    def __init__(self):
-        self.opts     = {}
-        self.pair4lex = {}
-        #def __init__
-
-    #class Command:
-
 #################################################
 ## Common APP utils
 def version(self):
@@ -136,29 +47,6 @@ def _check_API(ver):
         app.msg_status(NEED_NEWER_API)
         return False
     return True
-
-def get_app_default_opts(**kw):
-    return {}
-
-def _get_file_opts(opts_json, def_opts={}, **kw):
-#   global LAST_FILE_OPTS
-    if not os.path.exists(opts_json):
-        pass;                  #LOG and log('no {}',os.path.basename(opts_json))
-        LAST_FILE_OPTS.pop(opts_json, None)
-        return def_opts
-    mtime_os    = os.path.getmtime(opts_json)
-    if opts_json not in LAST_FILE_OPTS:
-        pass;                  #LOG and log('load "{}" with mtime_os={}',os.path.basename(opts_json), int(mtime_os))
-        opts    = _json_loads(open(opts_json).read(), **kw)
-        LAST_FILE_OPTS[opts_json]       = (opts, mtime_os)
-    else:
-        opts, mtime = LAST_FILE_OPTS[opts_json]
-        if mtime_os > mtime:
-            pass;              #LOG and log('reload "{}" with mtime, mtime_os={}',os.path.basename(opts_json), (int(mtime), int(mtime_os)))
-            opts= _json_loads(open(opts_json).read(), **kw)
-            LAST_FILE_OPTS[opts_json]   = (opts, mtime_os)
-    return opts
-   #def _get_file_opts
 
 def _json_loads(s, **kw):
     ''' Adapt s for json.loads
