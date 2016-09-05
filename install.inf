@@ -1,0 +1,52 @@
+[info]
+title=In-text bookmarks
+desc=Allows to place bookmarks as text-comments (permanent bookmarks), and to navigate to them
+type=py-plugin
+subdir=syn_intext_bookmarks
+
+[ini10]
+section=Commands
+id=In-te&xt Bookmarks\List for current &tab
+params=dlg_ibms_in_tab
+;menu=0
+
+[ini11]
+section=Commands
+id=In-te&xt Bookmarks\List for a&ll tabs
+params=dlg_ibms_in_tabs
+;menu=0
+
+[ini21]
+section=Commands
+id=In-te&xt Bookmarks\Go to &next
+params=next_ibm
+;menu=0
+
+[ini22]
+section=Commands
+id=In-te&xt Bookmarks\Go to &previous
+params=prev_ibm
+;menu=0
+
+
+[ini30]
+section=Commands
+id=In-te&xt Bookmarks\-
+params=_
+
+[ini31]
+section=Commands
+id=In-te&xt Bookmarks\&Config...
+params=dlg_config
+;menu=0
+
+[ini40]
+section=Commands
+id=In-te&xt Bookmarks\-
+params=_
+
+[ini41]
+section=Commands
+id=In-te&xt Bookmarks\&Add
+params=add_ibm
+;menu=0
