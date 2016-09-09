@@ -1,5 +1,5 @@
 [info]
-title=Intext bookmarks
+title=Intext Bookmarks
 desc=Allows to place bookmarks as text-comments (permanent bookmarks), and to navigate to them
 type=py-plugin
 subdir=syn_intext_bookmarks
